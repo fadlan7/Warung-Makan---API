@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "m_table")
-public class EntityTable {
+public class DiningTable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;

@@ -29,7 +29,7 @@ public class Bill {
 
     @ManyToOne
     @JoinColumn(name = "table_id")
-    private EntityTable entityTable;
+    private DiningTable entityTable;
 
     @ManyToOne
     @JoinColumn(name = "trans_type")
