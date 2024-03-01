@@ -2,6 +2,7 @@ package com.enigma.wmb_api.service;
 
 import com.enigma.wmb_api.dto.request.SearchMenuRequest;
 import com.enigma.wmb_api.entity.Menu;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface MenuService {
 
     Menu getById(String id);
 
-    List<Menu> getAll(SearchMenuRequest request);
+    Page<Menu> getAll(SearchMenuRequest request);
 
     Menu update(Menu menu);
 
