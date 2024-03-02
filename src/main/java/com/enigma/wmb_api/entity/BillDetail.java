@@ -26,9 +26,9 @@ public class BillDetail {
     private Menu menu;
 
     @Column(name = "qty", nullable = false)
-    private Float qty;
+    private Integer qty;
 
     @Column(name = "price", nullable = false)
-    private float price;
+    private Integer price;
 
 }
