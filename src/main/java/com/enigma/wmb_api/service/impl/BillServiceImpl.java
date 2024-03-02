@@ -5,11 +5,12 @@ import com.enigma.wmb_api.dto.request.SearchBillRequest;
 import com.enigma.wmb_api.dto.response.BillDetailResponse;
 import com.enigma.wmb_api.dto.response.BillResponse;
 import com.enigma.wmb_api.entity.*;
-import com.enigma.wmb_api.repository.BillDetailRepository;
 import com.enigma.wmb_api.repository.BillRepository;
 import com.enigma.wmb_api.service.*;
+import com.enigma.wmb_api.specification.BillSpecification;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -90,7 +91,42 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public Page<Bill> getAllBill(SearchBillRequest request) {
-        return null;
+    public Page<BillResponse> getAllBill(SearchBillRequest request) {
+        if (request.getPage() <= 0) request.setPage(1);
+
+        Sort sort = Sort.by(Sort.Direction.fromString(request.getDirection()), request.getSortBy());
+        Pageable pageable = PageRequest.of((request.getPage() - 1), request.getSize(), sort);
+
+        Specification<Bill> specification = BillSpecification.getSpecification(request);
+
+        Page<Bill> bills = billRepository.findAll(specification, pageable);
+
+        List<BillResponse> billResponses = bills.getContent().stream().map(bill -> {
+            List<BillDetailResponse> billDetailResponses = bill.getBillDetails().stream().map(billDetail -> {
+                return BillDetailResponse.builder()
+                        .id(billDetail.getId())
+                        .billId(billDetail.getBill().getId())
+                        .menuId(billDetail.getMenu().getId())
+                        .qty(billDetail.getQty())
+                        .price(billDetail.getPrice())
+                        .build();
+            }).toList();
+
+            String tableId = null;
+            if (bill.getDiningTable() != null) {
+                tableId = bill.getDiningTable().getId();
+            }
+
+            return BillResponse.builder()
+                    .id(bill.getId())
+                    .transDate(bill.getTransDate())
+                    .customerId(bill.getCustomer().getId())
+                    .transType(bill.getTransactionType().getId())
+                    .tableId(tableId)
+                    .billDetails(billDetailResponses)
+                    .build();
+        }).toList();
+
+        return new PageImpl<>(billResponses, pageable, bills.getTotalElements());
     }
 }

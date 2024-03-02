@@ -12,6 +12,7 @@ public class SearchBillRequest {
     private Integer size;
     private String sortBy;
     private String direction;
+    private String id;
     private String customerId;
     private String tableId;
     private String transType;

@@ -10,5 +10,5 @@ import org.springframework.data.domain.Page;
 public interface BillService {
     BillResponse create (BillRequest request);
 
-    Page<Bill> getAllBill(SearchBillRequest request);
+    Page<BillResponse> getAllBill(SearchBillRequest request);
 }
