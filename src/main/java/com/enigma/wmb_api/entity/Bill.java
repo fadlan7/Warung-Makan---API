@@ -12,6 +12,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "t_bill")
 public class Bill {
@@ -29,7 +30,7 @@ public class Bill {
 
     @ManyToOne
     @JoinColumn(name = "table_id")
-    private DiningTable entityTable;
+    private DiningTable diningTable;
 
     @ManyToOne
     @JoinColumn(name = "trans_type")

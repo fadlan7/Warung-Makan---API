@@ -13,6 +13,8 @@ public class TransactionType {
     @Id
     private String id;
 
+
+//    @Enumerated(EnumType.STRING)
     @Column(name = "description")
     private String description;
 }
