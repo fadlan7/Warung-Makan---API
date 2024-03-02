@@ -19,12 +19,12 @@ public class Menu {
     private String id;
 
     @NotBlank(message = "Name is required")
-    @Column(name = "menu_name", nullable = true)
+    @Column(name = "menu_name", nullable = false)
     private String name;
 
     @NotNull(message = "Price is required")
     @Min(value = 0, message = "Price must be greater than or equal 0")
-    @Column(name = "price", nullable = true)
+    @Column(name = "price", nullable = false)
     private Float price;
 
 

@@ -2,6 +2,7 @@ package com.enigma.wmb_api.service;
 
 import com.enigma.wmb_api.dto.request.SearchCustomerRequest;
 import com.enigma.wmb_api.entity.Customer;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface CustomerService {
 
     Customer getById(String id);
 
-    List<Customer> getAll(SearchCustomerRequest customer);
+    Page<Customer> getAll(SearchCustomerRequest customer);
 
     Customer update(Customer customer);
 
