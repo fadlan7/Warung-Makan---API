@@ -5,6 +5,7 @@ import com.enigma.wmb_api.entity.DiningTable;
 import com.enigma.wmb_api.repository.DiningTableRepository;
 import com.enigma.wmb_api.service.DiningTableService;
 import com.enigma.wmb_api.specification.DiningTableSpecification;
+import com.enigma.wmb_api.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -18,9 +19,12 @@ import java.util.List;
 public class DiningTableServiceImpl implements DiningTableService {
 
     private final DiningTableRepository tableRepository;
+    private final ValidationUtil validationUtil;
 
     @Override
     public DiningTable create(DiningTable diningTable) {
+        validationUtil.validate(diningTable);
+
         return tableRepository.save(diningTable);
     }
 
@@ -38,6 +42,8 @@ public class DiningTableServiceImpl implements DiningTableService {
     @Override
     public DiningTable update(DiningTable diningTable) {
         findByIdOrThrowNotFound(diningTable.getId());
+        validationUtil.validate(diningTable);
+
         return tableRepository.save(diningTable);
     }
 

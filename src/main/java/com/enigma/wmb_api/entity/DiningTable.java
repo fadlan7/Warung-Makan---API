@@ -1,6 +1,7 @@
 package com.enigma.wmb_api.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Getter
@@ -14,7 +15,8 @@ public class DiningTable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(name = "table_name")
+    @NotBlank(message = "Name is required")
+    @Column(name = "table_name", nullable = false)
     private String name;
 
 }
