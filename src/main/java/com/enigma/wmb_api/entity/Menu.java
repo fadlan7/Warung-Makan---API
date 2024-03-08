@@ -1,5 +1,6 @@
 package com.enigma.wmb_api.entity;
 
+import com.enigma.wmb_api.constant.ConstantTable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -12,7 +13,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "m_menu")
+@Table(name = ConstantTable.MENU)
 public class Menu {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

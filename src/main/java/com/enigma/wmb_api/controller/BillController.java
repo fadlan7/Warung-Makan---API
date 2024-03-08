@@ -1,5 +1,6 @@
 package com.enigma.wmb_api.controller;
 
+import com.enigma.wmb_api.constant.APIUrl;
 import com.enigma.wmb_api.dto.request.BillRequest;
 import com.enigma.wmb_api.dto.request.SearchBillRequest;
 import com.enigma.wmb_api.dto.response.BillResponse;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/bills")
+@RequestMapping(path = APIUrl.Bill_API)
 public class BillController {
     private final BillService billService;
 

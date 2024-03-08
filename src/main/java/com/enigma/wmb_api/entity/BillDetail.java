@@ -1,5 +1,6 @@
 package com.enigma.wmb_api.entity;
 
+import com.enigma.wmb_api.constant.ConstantTable;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "t_bill_detail")
+@Table(name = ConstantTable.BILL_DETAIL)
 public class BillDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

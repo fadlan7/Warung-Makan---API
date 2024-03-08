@@ -1,5 +1,6 @@
 package com.enigma.wmb_api.controller;
 
+import com.enigma.wmb_api.constant.APIUrl;
 import com.enigma.wmb_api.dto.request.SearchMenuRequest;
 import com.enigma.wmb_api.dto.response.CommonResponse;
 import com.enigma.wmb_api.dto.response.PagingResponse;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/menus")
+@RequestMapping(path = APIUrl.MENU_API)
 public class MenuController {
 
     private final MenuService menuService;

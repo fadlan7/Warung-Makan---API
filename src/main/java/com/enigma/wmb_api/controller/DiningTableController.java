@@ -1,5 +1,6 @@
 package com.enigma.wmb_api.controller;
 
+import com.enigma.wmb_api.constant.APIUrl;
 import com.enigma.wmb_api.dto.request.SearchDiningTableRequest;
 import com.enigma.wmb_api.dto.response.CommonResponse;
 import com.enigma.wmb_api.entity.DiningTable;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/tables")
+@RequestMapping(path = APIUrl.DINING_TABLE_API)
 public class DiningTableController {
     private final DiningTableService tableService;
 

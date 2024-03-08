@@ -1,5 +1,6 @@
 package com.enigma.wmb_api.controller;
 
+import com.enigma.wmb_api.constant.APIUrl;
 import com.enigma.wmb_api.dto.request.SearchCustomerRequest;
 import com.enigma.wmb_api.dto.response.CommonResponse;
 import com.enigma.wmb_api.dto.response.PagingResponse;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/customers")
+@RequestMapping(path = APIUrl.CUSTOMER_API)
 public class CustomerController {
 
     private final CustomerService customerService;
