@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,18 +79,10 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Transactional(rollbackFor = Exception.class)
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN') OR @authenticateUserServiceImpl.hasSameId(#request)")
     @Override
     public CustomerResponse update(UpdateCustomerRequest request) {
         Customer currentCustomer = findByIdOrThrowNotFound(request.getId());
-        UserAccount userAccount = userService.getByContext();
-
-        List<String> checkRoles = userAccount.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-
-
-        if (!(checkRoles.contains("ROLE_SUPER_ADMIN") || checkRoles.contains("ROLE_ADMIN")))
-            if (!userAccount.getId().equals(currentCustomer.getUserAccount().getId())) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "cannot access this resource");
-            }
 
         currentCustomer.setName(request.getName());
         currentCustomer.setMobilePhoneNo(request.getMobilePhoneNo());

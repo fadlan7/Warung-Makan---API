@@ -8,6 +8,7 @@ import com.enigma.wmb_api.service.DiningTableService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 public class DiningTableController {
     private final DiningTableService tableService;
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
     @PostMapping
     public ResponseEntity<CommonResponse<DiningTable>> createNewTable(@RequestBody DiningTable table) {
 
@@ -68,6 +70,7 @@ public class DiningTableController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
     @PutMapping
     public ResponseEntity<CommonResponse<DiningTable>> updateTable(
             @RequestBody DiningTable table
@@ -84,6 +87,7 @@ public class DiningTableController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<CommonResponse<String>> deleteTable(
             @PathVariable String id

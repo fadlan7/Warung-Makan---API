@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class MenuController {
 
     private final MenuService menuService;
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
     @PostMapping
     public ResponseEntity<CommonResponse<Menu>> createNewMenu(@RequestBody Menu menu) {
 
@@ -92,6 +94,7 @@ public class MenuController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
     @PutMapping
     public ResponseEntity<CommonResponse<Menu>> updateMenu(@RequestBody Menu menu) {
         Menu updatedMenu = menuService.update(menu);
@@ -107,6 +110,7 @@ public class MenuController {
                 .body(response);
     }
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<CommonResponse<String>> deleteById(@PathVariable String id) {
         menuService.delete(id);

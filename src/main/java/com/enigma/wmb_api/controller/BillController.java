@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,8 @@ import java.util.List;
 public class BillController {
     private final BillService billService;
 
+
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
     @PostMapping
     public ResponseEntity<CommonResponse<BillResponse>> createNewBill(@RequestBody BillRequest request) {
         BillResponse newBill = billService.create(request);

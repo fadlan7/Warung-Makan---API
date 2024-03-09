@@ -94,6 +94,7 @@ public class CustomerController {
                 .body(response);
     }
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<CommonResponse<String>> deleteById(@PathVariable String id) {
         customerService.delete(id);
@@ -106,6 +107,7 @@ public class CustomerController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
     @PatchMapping("/{id}")
     public ResponseEntity<CommonResponse<String>> updateStatusCustomer(
             @PathVariable(name = "id") String id,
