@@ -8,6 +8,7 @@ import com.enigma.wmb_api.dto.response.BillResponse;
 import com.enigma.wmb_api.dto.response.CommonResponse;
 import com.enigma.wmb_api.dto.response.PagingResponse;
 import com.enigma.wmb_api.service.BillService;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -47,7 +48,8 @@ public class BillController {
             @RequestParam(name = "sortBy", defaultValue = "transDate") String sortBy,
             @RequestParam(name = "direction", defaultValue = "asc") String direction,
             @RequestParam(name = "id", required = false) String id,
-            @RequestParam(name = "customerId", required = false) String customerId,
+            @RequestParam(name = "minTransDate", required = false) @JsonFormat(pattern = "yyyy-MM-dd") String minTransDate,
+            @RequestParam(name = "maxTransDate", required = false) @JsonFormat(pattern = "yyyy-MM-dd") String maxTransDate,
             @RequestParam(name = "tableId", required = false) String tableId,
             @RequestParam(name = "transType", required = false) String transType
     ) {
@@ -57,8 +59,8 @@ public class BillController {
                 .sortBy(sortBy)
                 .direction(direction)
                 .id(id)
-                .customerId(customerId)
-//                .tableId(tableId)
+                .minTransDate(minTransDate)
+                .tableId(tableId)
                 .transType(transType)
                 .build();
         Page<BillResponse> bills = billService.getAllBill(request);

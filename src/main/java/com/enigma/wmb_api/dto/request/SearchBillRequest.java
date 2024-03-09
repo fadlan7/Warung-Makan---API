@@ -13,7 +13,8 @@ public class SearchBillRequest {
     private String sortBy;
     private String direction;
     private String id;
-    private String customerId;
+    private String minTransDate;
+    private String maxTransDate;
     private String tableId;
     private String transType;
 }
