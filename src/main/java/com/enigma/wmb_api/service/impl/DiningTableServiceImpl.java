@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class DiningTableServiceImpl implements DiningTableService {
     private final DiningTableRepository tableRepository;
     private final ValidationUtil validationUtil;
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public DiningTable create(DiningTable diningTable) {
         validationUtil.validate(diningTable);
@@ -28,17 +30,20 @@ public class DiningTableServiceImpl implements DiningTableService {
         return tableRepository.save(diningTable);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public DiningTable getById(String id) {
         return findByIdOrThrowNotFound(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<DiningTable> getAll(SearchDiningTableRequest request) {
         Specification<DiningTable> specification = DiningTableSpecification.getSpecification(request);
         return tableRepository.findAll(specification);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public DiningTable update(DiningTable diningTable) {
         findByIdOrThrowNotFound(diningTable.getId());
@@ -47,6 +52,7 @@ public class DiningTableServiceImpl implements DiningTableService {
         return tableRepository.save(diningTable);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void delete(String id) {
         DiningTable table = findByIdOrThrowNotFound(id);

@@ -6,6 +6,7 @@ import com.enigma.wmb_api.service.TransactionTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -14,6 +15,7 @@ public class TransactionTypeServiceImpl implements TransactionTypeService {
 
     private final TransactionTypeRepository trxTypeRepository;
 
+    @Transactional(readOnly = true)
     @Override
     public TransactionType getById(String id) {
         return findByIdOrThrowNotFound(id.toUpperCase());

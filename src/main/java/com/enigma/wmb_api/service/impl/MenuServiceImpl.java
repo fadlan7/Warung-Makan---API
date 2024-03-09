@@ -13,7 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -25,6 +27,8 @@ public class MenuServiceImpl implements MenuService {
     private final MenuRepository menuRepository;
     private final ValidationUtil validationUtil;
 
+    @Transactional(rollbackFor = Exception.class)
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Override
     public Menu create(Menu menu) {
         validationUtil.validate(menu);
@@ -32,11 +36,13 @@ public class MenuServiceImpl implements MenuService {
         return menuRepository.saveAndFlush(menu);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Menu getById(String id) {
         return findByIdOrThrowNotFound(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Page<Menu> getAll(SearchMenuRequest request) {
         if (request.getPage() <= 0) request.setPage(1);
@@ -48,6 +54,8 @@ public class MenuServiceImpl implements MenuService {
         return menuRepository.findAll(specification, pageable);
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Override
     public Menu update(Menu menu) {
         validationUtil.validate(menu);
@@ -56,6 +64,8 @@ public class MenuServiceImpl implements MenuService {
         return menuRepository.saveAndFlush(menu);
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Override
     public void delete(String id) {
         findByIdOrThrowNotFound(id);

@@ -90,6 +90,7 @@ public class BillServiceImpl implements BillService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Page<BillResponse> getAllBill(SearchBillRequest request) {
         if (request.getPage() <= 0) request.setPage(1);

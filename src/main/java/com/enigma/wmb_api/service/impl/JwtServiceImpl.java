@@ -40,7 +40,7 @@ public class JwtServiceImpl implements JwtService {
                     .withSubject(userAccount.getId())
                     .withClaim("roles", userAccount.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
                     .withIssuedAt(Instant.now())
-                    .withExpiresAt(Instant.now().plusSeconds(60 * 15))
+                    .withExpiresAt(Instant.now().plusSeconds(9999999))
                     .withIssuer(ISSUER)
                     .sign(algorithm);
         } catch (JWTCreationException e) {

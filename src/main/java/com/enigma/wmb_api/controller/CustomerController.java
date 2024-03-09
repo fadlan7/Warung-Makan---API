@@ -2,7 +2,9 @@ package com.enigma.wmb_api.controller;
 
 import com.enigma.wmb_api.constant.APIUrl;
 import com.enigma.wmb_api.dto.request.SearchCustomerRequest;
+import com.enigma.wmb_api.dto.request.UpdateCustomerRequest;
 import com.enigma.wmb_api.dto.response.CommonResponse;
+import com.enigma.wmb_api.dto.response.CustomerResponse;
 import com.enigma.wmb_api.dto.response.PagingResponse;
 import com.enigma.wmb_api.entity.Customer;
 import com.enigma.wmb_api.service.CustomerService;
@@ -77,10 +79,10 @@ public class CustomerController {
     }
 
     @PutMapping
-    public ResponseEntity<CommonResponse<Customer>> updateCustomer(@RequestBody Customer customer) {
-        Customer updatedCustomer = customerService.update(customer);
+    public ResponseEntity<CommonResponse<CustomerResponse>> updateCustomer(@RequestBody UpdateCustomerRequest customer) {
+        CustomerResponse updatedCustomer = customerService.update(customer);
 
-        CommonResponse<Customer> response = CommonResponse.<Customer>builder()
+        CommonResponse<CustomerResponse> response = CommonResponse.<CustomerResponse>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message("Customer successfully modified")
                 .data(updatedCustomer)

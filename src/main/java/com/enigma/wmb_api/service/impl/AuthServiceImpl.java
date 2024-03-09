@@ -12,8 +12,11 @@ import com.enigma.wmb_api.service.AuthService;
 import com.enigma.wmb_api.service.CustomerService;
 import com.enigma.wmb_api.service.JwtService;
 import com.enigma.wmb_api.service.RoleService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +37,31 @@ public class AuthServiceImpl implements AuthService {
     private final CustomerService customerService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+
+    @Value("${enigma_shop.username.superadmin}")
+    private String superAdminUsername;
+    @Value("${enigma_shop.password.superadmin}")
+    private String superAdminPassword;
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostConstruct
+    public void initSuperAdmin() {
+        Optional<UserAccount> currentUser = userAccountRepository.findByUsername(superAdminUsername);
+        if (currentUser.isPresent()) return;
+
+        Role superAdmin = roleService.getOrSave(UserRole.ROLE_SUPER_ADMIN);
+        Role admin = roleService.getOrSave(UserRole.ROLE_ADMIN);
+        Role customer = roleService.getOrSave(UserRole.ROLE_CUSTOMER);
+
+        UserAccount account = UserAccount.builder()
+                .username(superAdminUsername)
+                .password(passwordEncoder.encode(superAdminPassword))
+                .role(List.of(superAdmin, admin, customer))
+                .isEnable(true)
+                .build();
+
+        userAccountRepository.save(account);
+    }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -51,6 +80,7 @@ public class AuthServiceImpl implements AuthService {
             userAccountRepository.saveAndFlush(account);
 
             Customer customer = Customer.builder()
+                    .isMember(false)
                     .userAccount(account)
                     .build();
             customerService.create(customer);
@@ -69,6 +99,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Transactional(rollbackFor = Exception.class)
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN')")
     @Override
     public RegisterResponse registerAdmin(AuthRequest request) {
         Role roleAdmin = roleService.getOrSave(UserRole.ROLE_ADMIN);
