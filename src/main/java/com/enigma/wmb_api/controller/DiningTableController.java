@@ -1,6 +1,7 @@
 package com.enigma.wmb_api.controller;
 
 import com.enigma.wmb_api.constant.APIUrl;
+import com.enigma.wmb_api.constant.ResponseMessage;
 import com.enigma.wmb_api.dto.request.SearchDiningTableRequest;
 import com.enigma.wmb_api.dto.response.CommonResponse;
 import com.enigma.wmb_api.entity.DiningTable;
@@ -27,7 +28,7 @@ public class DiningTableController {
 
         CommonResponse<DiningTable> response = CommonResponse.<DiningTable>builder()
                 .statusCode(HttpStatus.CREATED.value())
-                .message("Successfully create new dining table")
+                 .message(ResponseMessage.SUCCESS_SAVE_DATA)
                 .data(newTable)
                 .build();
 
@@ -43,7 +44,7 @@ public class DiningTableController {
 
         CommonResponse<DiningTable> response = CommonResponse.<DiningTable>builder()
                 .statusCode(HttpStatus.OK.value())
-                .message("Dining table found")
+                 .message(ResponseMessage.SUCCESS_GET_DATA)
                 .data(table)
                 .build();
 
@@ -63,7 +64,7 @@ public class DiningTableController {
 
         CommonResponse<List<DiningTable>> response = CommonResponse.<List<DiningTable>>builder()
                 .statusCode(HttpStatus.OK.value())
-                .message("Success get all table")
+                 .message(ResponseMessage.SUCCESS_GET_DATA)
                 .data(tables)
                 .build();
 
@@ -80,7 +81,7 @@ public class DiningTableController {
 
         CommonResponse<DiningTable> response = CommonResponse.<DiningTable>builder()
                 .statusCode(HttpStatus.OK.value())
-                .message("Dining table successfully modified")
+                 .message(ResponseMessage.SUCCESS_UPDATE_DATA)
                 .data(updatedTable)
                 .build();
 
@@ -96,7 +97,7 @@ public class DiningTableController {
 
         CommonResponse<String> response = CommonResponse.<String>builder()
                 .statusCode(HttpStatus.OK.value())
-                .message("Dining table successfully deleted")
+                 .message(ResponseMessage.SUCCESS_DELETE_DATA)
                 .build();
 
         return ResponseEntity.ok(response);

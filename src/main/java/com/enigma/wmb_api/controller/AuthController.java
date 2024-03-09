@@ -1,6 +1,7 @@
 package com.enigma.wmb_api.controller;
 
 import com.enigma.wmb_api.constant.APIUrl;
+import com.enigma.wmb_api.constant.ResponseMessage;
 import com.enigma.wmb_api.dto.request.AuthRequest;
 import com.enigma.wmb_api.dto.response.CommonResponse;
 import com.enigma.wmb_api.dto.response.LoginResponse;
@@ -31,7 +32,7 @@ public class AuthController {
 
         CommonResponse<RegisterResponse> response = CommonResponse.<RegisterResponse>builder()
                 .statusCode(HttpStatus.CREATED.value())
-                .message("Successfully create new account")
+                .message(ResponseMessage.SUCCESS_SAVE_DATA)
                 .data(register)
                 .build();
 
@@ -46,7 +47,7 @@ public class AuthController {
         RegisterResponse register = authService.registerAdmin(request);
         CommonResponse<RegisterResponse> response = CommonResponse.<RegisterResponse>builder()
                 .statusCode(HttpStatus.CREATED.value())
-                .message("success save data")
+                .message(ResponseMessage.SUCCESS_SAVE_DATA)
                 .data(register)
                 .build();
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -60,7 +61,7 @@ public class AuthController {
         LoginResponse loginResponse = authService.login(request);
         CommonResponse<LoginResponse> response = CommonResponse.<LoginResponse>builder()
                 .statusCode(HttpStatus.OK.value())
-                .message("Login successfully")
+                 .message(ResponseMessage.SUCCESS_LOGIN)
                 .data(loginResponse)
                 .build();
 

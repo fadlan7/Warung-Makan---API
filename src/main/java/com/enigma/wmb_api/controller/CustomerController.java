@@ -1,6 +1,7 @@
 package com.enigma.wmb_api.controller;
 
 import com.enigma.wmb_api.constant.APIUrl;
+import com.enigma.wmb_api.constant.ResponseMessage;
 import com.enigma.wmb_api.dto.request.SearchCustomerRequest;
 import com.enigma.wmb_api.dto.request.UpdateCustomerRequest;
 import com.enigma.wmb_api.dto.response.CommonResponse;
@@ -31,7 +32,7 @@ public class CustomerController {
 
         CommonResponse<Customer> response = CommonResponse.<Customer>builder()
                 .statusCode(HttpStatus.OK.value())
-                .message("Customer found")
+                 .message(ResponseMessage.SUCCESS_GET_DATA)
                 .data(customer)
                 .build();
 
@@ -71,7 +72,7 @@ public class CustomerController {
 
         CommonResponse<List<GetCustomerResponse>> response = CommonResponse.<List<GetCustomerResponse>>builder()
                 .statusCode(HttpStatus.OK.value())
-                .message("Success get all customer")
+                .message(ResponseMessage.SUCCESS_GET_DATA)
                 .data(customers.getContent())
                 .paging(pagingResponse)
                 .build();
@@ -85,7 +86,7 @@ public class CustomerController {
 
         CommonResponse<CustomerResponse> response = CommonResponse.<CustomerResponse>builder()
                 .statusCode(HttpStatus.OK.value())
-                .message("Customer successfully modified")
+                 .message(ResponseMessage.SUCCESS_UPDATE_DATA)
                 .data(updatedCustomer)
                 .build();
 
@@ -101,7 +102,7 @@ public class CustomerController {
 
         CommonResponse<String> response = CommonResponse.<String>builder()
                 .statusCode(HttpStatus.OK.value())
-                .message("Customer successfully deleted")
+                 .message(ResponseMessage.SUCCESS_DELETE_DATA)
                 .build();
 
         return ResponseEntity.ok(response);
@@ -116,7 +117,7 @@ public class CustomerController {
 
         CommonResponse<String> response = CommonResponse.<String>builder()
                 .statusCode(HttpStatus.OK.value())
-                .message("Customer member status successfully updated")
+                 .message(ResponseMessage.SUCCESS_UPDATE_DATA)
                 .build();
 
         return ResponseEntity.ok(response);

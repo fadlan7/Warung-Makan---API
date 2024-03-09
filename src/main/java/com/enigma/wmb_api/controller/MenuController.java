@@ -1,6 +1,7 @@
 package com.enigma.wmb_api.controller;
 
 import com.enigma.wmb_api.constant.APIUrl;
+import com.enigma.wmb_api.constant.ResponseMessage;
 import com.enigma.wmb_api.dto.request.SearchMenuRequest;
 import com.enigma.wmb_api.dto.response.CommonResponse;
 import com.enigma.wmb_api.dto.response.PagingResponse;
@@ -30,7 +31,7 @@ public class MenuController {
 
         CommonResponse<Menu> response = CommonResponse.<Menu>builder()
                 .statusCode(HttpStatus.CREATED.value())
-                .message("Successfully create new menu")
+                 .message(ResponseMessage.SUCCESS_SAVE_DATA)
                 .data(newMenu)
                 .build();
 
@@ -45,7 +46,7 @@ public class MenuController {
 
         CommonResponse<Menu> response = CommonResponse.<Menu>builder()
                 .statusCode(HttpStatus.OK.value())
-                .message("Menu found")
+                 .message(ResponseMessage.SUCCESS_GET_DATA)
                 .data(menu)
                 .build();
 
@@ -86,7 +87,7 @@ public class MenuController {
 
         CommonResponse<List<Menu>> response = CommonResponse.<List<Menu>>builder()
                 .statusCode(HttpStatus.OK.value())
-                .message("Success get all menu")
+                 .message(ResponseMessage.SUCCESS_GET_DATA)
                 .data(menus.getContent())
                 .paging(pagingResponse)
                 .build();
@@ -101,7 +102,7 @@ public class MenuController {
 
         CommonResponse<Menu> response = CommonResponse.<Menu>builder()
                 .statusCode(HttpStatus.OK.value())
-                .message("Menu successfully modified")
+                 .message(ResponseMessage.SUCCESS_UPDATE_DATA)
                 .data(updatedMenu)
                 .build();
 
@@ -117,7 +118,7 @@ public class MenuController {
 
         CommonResponse<String> response = CommonResponse.<String>builder()
                 .statusCode(HttpStatus.OK.value())
-                .message("Menu successfully deleted")
+                .message(ResponseMessage.SUCCESS_DELETE_DATA)
                 .build();
 
         return ResponseEntity.ok(response);

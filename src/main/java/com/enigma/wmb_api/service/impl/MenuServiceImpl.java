@@ -1,5 +1,6 @@
 package com.enigma.wmb_api.service.impl;
 
+import com.enigma.wmb_api.constant.ResponseMessage;
 import com.enigma.wmb_api.dto.request.SearchMenuRequest;
 import com.enigma.wmb_api.entity.Menu;
 import com.enigma.wmb_api.repository.MenuRepository;
@@ -74,6 +75,6 @@ public class MenuServiceImpl implements MenuService {
     }
 
     public Menu findByIdOrThrowNotFound(String id) {
-        return menuRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Menu not found"));
+        return menuRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ResponseMessage.ERROR_NOT_FOUND));
     }
 }

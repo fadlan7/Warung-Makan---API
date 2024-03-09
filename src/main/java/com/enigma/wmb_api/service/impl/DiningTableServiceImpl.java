@@ -1,5 +1,6 @@
 package com.enigma.wmb_api.service.impl;
 
+import com.enigma.wmb_api.constant.ResponseMessage;
 import com.enigma.wmb_api.dto.request.SearchDiningTableRequest;
 import com.enigma.wmb_api.entity.DiningTable;
 import com.enigma.wmb_api.repository.DiningTableRepository;
@@ -60,6 +61,6 @@ public class DiningTableServiceImpl implements DiningTableService {
     }
 
     public DiningTable findByIdOrThrowNotFound(String id) {
-        return tableRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Dining table not found"));
+        return tableRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ResponseMessage.ERROR_NOT_FOUND));
     }
 }

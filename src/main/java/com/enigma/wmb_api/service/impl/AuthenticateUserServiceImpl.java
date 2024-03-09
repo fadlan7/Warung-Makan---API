@@ -1,5 +1,6 @@
 package com.enigma.wmb_api.service.impl;
 
+import com.enigma.wmb_api.constant.ResponseMessage;
 import com.enigma.wmb_api.dto.request.UpdateCustomerRequest;
 import com.enigma.wmb_api.entity.Customer;
 import com.enigma.wmb_api.entity.UserAccount;
@@ -21,7 +22,7 @@ public class AuthenticateUserServiceImpl {
         UserAccount userAccount = userService.getByContext();
 
         if (!userAccount.getId().equals(currentCustomer.getUserAccount().getId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "forbidden");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, ResponseMessage.ERROR_FORBIDDEN);
         }
         return true;
     }

@@ -1,6 +1,7 @@
 package com.enigma.wmb_api.controller;
 
 import com.enigma.wmb_api.constant.APIUrl;
+import com.enigma.wmb_api.constant.ResponseMessage;
 import com.enigma.wmb_api.dto.request.BillRequest;
 import com.enigma.wmb_api.dto.request.SearchBillRequest;
 import com.enigma.wmb_api.dto.response.BillResponse;
@@ -30,7 +31,7 @@ public class BillController {
 
         CommonResponse<BillResponse> response = CommonResponse.<BillResponse>builder()
                 .statusCode(HttpStatus.CREATED.value())
-                .message("Successfully create new bill")
+                .message(ResponseMessage.SUCCESS_SAVE_DATA)
                 .data(newBill)
                 .build();
 
@@ -73,7 +74,7 @@ public class BillController {
 
         CommonResponse<List<BillResponse>> response = CommonResponse.<List<BillResponse>>builder()
                 .statusCode(HttpStatus.OK.value())
-                .message("Success get all bill")
+                .message(ResponseMessage.SUCCESS_GET_DATA)
                 .data(bills.getContent())
                 .paging(pagingResponse)
                 .build();

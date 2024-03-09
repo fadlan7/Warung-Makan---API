@@ -1,5 +1,6 @@
 package com.enigma.wmb_api.service.impl;
 
+import com.enigma.wmb_api.constant.ResponseMessage;
 import com.enigma.wmb_api.dto.request.SearchCustomerRequest;
 import com.enigma.wmb_api.dto.request.UpdateCustomerRequest;
 import com.enigma.wmb_api.dto.response.CustomerResponse;
@@ -106,7 +107,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     public Customer findByIdOrThrowNotFound(String id) {
-        return customerRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
+        return customerRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ResponseMessage.ERROR_NOT_FOUND));
     }
 
     private CustomerResponse convertCustomerToCustomerResponse(Customer newCustomer) {
