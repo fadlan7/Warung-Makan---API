@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,22 +21,6 @@ import java.util.List;
 public class CustomerController {
 
     private final CustomerService customerService;
-
-    @PostMapping
-    public ResponseEntity<CommonResponse<Customer>> createNewCustomer(@RequestBody Customer customer) {
-
-        Customer newCustomer = customerService.create(customer);
-
-        CommonResponse<Customer> response = CommonResponse.<Customer>builder()
-                .statusCode(HttpStatus.CREATED.value())
-                .message("Successfully create new customer")
-                .data(newCustomer)
-                .build();
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
-    }
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<CommonResponse<Customer>> getCustomerById(@PathVariable String id) {
@@ -50,6 +35,7 @@ public class CustomerController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @GetMapping
     public ResponseEntity<CommonResponse<List<Customer>>> getAllCustomer(
             @RequestParam(name = "page", defaultValue = "1") Integer page,

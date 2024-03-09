@@ -2,16 +2,14 @@ package com.enigma.wmb_api.entity;
 
 import com.enigma.wmb_api.constant.ConstantTable;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 @Table(name = ConstantTable.CUSTOMER)
 public class Customer {
     @Id
@@ -26,4 +24,8 @@ public class Customer {
 
     @Column(name = "is_member")
     private Boolean isMember;
+
+    @OneToOne
+    @JoinColumn(name = "user_account_id", unique = true)
+    private UserAccount userAccount;
 }
