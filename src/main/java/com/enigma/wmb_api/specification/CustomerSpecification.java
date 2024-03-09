@@ -2,7 +2,6 @@ package com.enigma.wmb_api.specification;
 
 import com.enigma.wmb_api.dto.request.SearchCustomerRequest;
 import com.enigma.wmb_api.entity.Customer;
-import com.enigma.wmb_api.repository.CustomerRepository;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -11,7 +10,6 @@ import java.util.List;
 
 public class CustomerSpecification {
     public static Specification<Customer> getSpecification(SearchCustomerRequest request) {
-        CustomerRepository customerRepository = null;
         return (root, cq, cb) -> {
 
             List<Predicate> predicates = new ArrayList<>();

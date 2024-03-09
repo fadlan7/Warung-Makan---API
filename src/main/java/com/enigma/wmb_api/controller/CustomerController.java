@@ -5,6 +5,7 @@ import com.enigma.wmb_api.dto.request.SearchCustomerRequest;
 import com.enigma.wmb_api.dto.request.UpdateCustomerRequest;
 import com.enigma.wmb_api.dto.response.CommonResponse;
 import com.enigma.wmb_api.dto.response.CustomerResponse;
+import com.enigma.wmb_api.dto.response.GetCustomerResponse;
 import com.enigma.wmb_api.dto.response.PagingResponse;
 import com.enigma.wmb_api.entity.Customer;
 import com.enigma.wmb_api.service.CustomerService;
@@ -39,7 +40,7 @@ public class CustomerController {
 
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @GetMapping
-    public ResponseEntity<CommonResponse<List<Customer>>> getAllCustomer(
+    public ResponseEntity<CommonResponse<List<GetCustomerResponse>>> getAllCustomer(
             @RequestParam(name = "page", defaultValue = "1") Integer page,
             @RequestParam(name = "size", defaultValue = "10") Integer size,
             @RequestParam(name = "sortBy", defaultValue = "name") String sortBy,
@@ -57,7 +58,7 @@ public class CustomerController {
                 .mobilePhoneNo(phoneNumber)
                 .isMember(isMember)
                 .build();
-        Page<Customer> customers = customerService.getAll(request);
+        Page<GetCustomerResponse> customers = customerService.getAll(request);
 
         PagingResponse pagingResponse = PagingResponse.builder()
                 .totalPages(customers.getTotalPages())
@@ -68,7 +69,7 @@ public class CustomerController {
                 .hasPrevious(customers.hasPrevious())
                 .build();
 
-        CommonResponse<List<Customer>> response = CommonResponse.<List<Customer>>builder()
+        CommonResponse<List<GetCustomerResponse>> response = CommonResponse.<List<GetCustomerResponse>>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message("Success get all customer")
                 .data(customers.getContent())

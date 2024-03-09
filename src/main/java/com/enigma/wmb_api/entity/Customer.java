@@ -1,6 +1,7 @@
 package com.enigma.wmb_api.entity;
 
 import com.enigma.wmb_api.constant.ConstantTable;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,5 +28,6 @@ public class Customer {
 
     @OneToOne
     @JoinColumn(name = "user_account_id", unique = true)
+    @JsonManagedReference
     private UserAccount userAccount;
 }

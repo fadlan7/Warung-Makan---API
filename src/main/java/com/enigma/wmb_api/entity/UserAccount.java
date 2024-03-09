@@ -1,6 +1,7 @@
 package com.enigma.wmb_api.entity;
 
 import com.enigma.wmb_api.constant.ConstantTable;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,6 +33,7 @@ public class UserAccount implements UserDetails {
     private Boolean isEnable;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonBackReference
     private List<Role> role;
 
 
