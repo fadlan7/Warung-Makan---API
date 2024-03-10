@@ -4,6 +4,7 @@ import com.enigma.wmb_api.dto.request.BillRequest;
 import com.enigma.wmb_api.dto.request.SearchBillRequest;
 import com.enigma.wmb_api.dto.response.BillDetailResponse;
 import com.enigma.wmb_api.dto.response.BillResponse;
+import com.enigma.wmb_api.dto.response.PaymentResponse;
 import com.enigma.wmb_api.entity.*;
 import com.enigma.wmb_api.repository.BillRepository;
 import com.enigma.wmb_api.service.*;
@@ -27,6 +28,7 @@ public class BillServiceImpl implements BillService {
     private final MenuService menuService;
     private final DiningTableService tableService;
     private final TransactionTypeService trxTypeService;
+    private final PaymentService paymentService;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -73,7 +75,15 @@ public class BillServiceImpl implements BillService {
                     .build();
         }).toList();
 
-//        System.out.println("dining table" + bill.getDiningTable().getId());
+        Payment payment =paymentService.createPayment(bill);
+        bill.setPayment(payment);
+
+        PaymentResponse paymentResponse = PaymentResponse.builder()
+                .id(payment.getId())
+                .token(payment.getToken())
+                .redirectUrl(payment.getRedirectUrl())
+                .transactionStatus(payment.getTransactionStatus())
+                .build();
 
         String diningTableId = null;
         if (request.getTableId() != null && !request.getTableId().isEmpty()) {
@@ -87,6 +97,7 @@ public class BillServiceImpl implements BillService {
                 .tableId(diningTableId)
                 .transType(bill.getTransactionType().getId())
                 .billDetails(billDetailResponses)
+                .paymentResponse(paymentResponse)
                 .build();
     }
 
