@@ -38,9 +38,9 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    @Value("${enigma_shop.username.superadmin}")
+    @Value("${warung_makan_bahari.username.superadmin}")
     private String superAdminUsername;
-    @Value("${enigma_shop.password.superadmin}")
+    @Value("${warung_makan_bahari.password.superadmin}")
     private String superAdminPassword;
 
     @Transactional(rollbackFor = Exception.class)

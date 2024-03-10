@@ -1,13 +1,20 @@
 package com.enigma.wmb_api.service.impl;
 
+import com.enigma.wmb_api.constant.APIUrl;
 import com.enigma.wmb_api.constant.ResponseMessage;
+import com.enigma.wmb_api.dto.request.NewMenuRequest;
 import com.enigma.wmb_api.dto.request.SearchMenuRequest;
+import com.enigma.wmb_api.dto.request.UpdateMenuRequest;
+import com.enigma.wmb_api.dto.response.ImageResponse;
 import com.enigma.wmb_api.dto.response.MenuResponse;
+import com.enigma.wmb_api.entity.Image;
 import com.enigma.wmb_api.entity.Menu;
 import com.enigma.wmb_api.repository.MenuRepository;
+import com.enigma.wmb_api.service.ImageService;
 import com.enigma.wmb_api.service.MenuService;
 import com.enigma.wmb_api.specification.MenuSpecification;
 import com.enigma.wmb_api.util.ValidationUtil;
+import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,28 +27,32 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class MenuServiceImpl implements MenuService {
 
     private final MenuRepository menuRepository;
     private final ValidationUtil validationUtil;
+    private final ImageService imageService;
 
     @Transactional(rollbackFor = Exception.class)
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Override
-    public MenuResponse create(Menu request) {
+    public MenuResponse create(NewMenuRequest request) {
         validationUtil.validate(request);
+
+        if (request.getImage().isEmpty()) throw new ConstraintViolationException("image is required", null);
+        Image image = imageService.create(request.getImage());
+
 
         Menu newMenu = Menu.builder()
                 .name(request.getName())
                 .price(request.getPrice())
+                .image(image)
                 .build();
 
         menuRepository.saveAndFlush(newMenu);
-        return convertProductToMenuResponse(newMenu);
+        return convertMenuToMenuResponse(newMenu);
     }
 
     @Transactional(readOnly = true)
@@ -59,13 +70,13 @@ public class MenuServiceImpl implements MenuService {
         Pageable pageable = PageRequest.of((request.getPage() - 1), request.getSize(), sort);
 
         Specification<Menu> specification = MenuSpecification.getSpecification(request);
-        return menuRepository.findAll(specification, pageable).map(this::convertProductToMenuResponse);
+        return menuRepository.findAll(specification, pageable).map(this::convertMenuToMenuResponse);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN')")
     @Override
-    public MenuResponse update(Menu request) {
+    public MenuResponse update(UpdateMenuRequest request) {
         Menu currentMenu = findByIdOrThrowNotFound(request.getId());
 
         currentMenu.setName(request.getName());
@@ -73,7 +84,15 @@ public class MenuServiceImpl implements MenuService {
 
         menuRepository.saveAndFlush(currentMenu);
 
-        return convertProductToMenuResponse(currentMenu);
+        if (request.getImage() != null && !request.getImage().isEmpty()) {
+            String currentImageId = currentMenu.getImage().getId();
+
+            Image image = imageService.create(request.getImage());
+            currentMenu.setImage(image);
+
+            imageService.deleteById(currentImageId);
+        }
+        return convertMenuToMenuResponse(currentMenu);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -89,11 +108,15 @@ public class MenuServiceImpl implements MenuService {
         return menuRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ResponseMessage.ERROR_NOT_FOUND));
     }
 
-        private MenuResponse convertProductToMenuResponse(Menu menu) {
+    private MenuResponse convertMenuToMenuResponse(Menu menu) {
         return MenuResponse.builder()
                 .id(menu.getId())
                 .name(menu.getName())
                 .price(menu.getPrice())
+                .image(ImageResponse.builder()
+                        .url(APIUrl.MENU_IMAGE_DOWNLOAD_API + menu.getImage().getId())
+                        .name(menu.getImage().getName())
+                        .build())
                 .build();
     }
 }
