@@ -99,7 +99,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN')")
     @Override
     public RegisterResponse registerAdmin(AuthRequest request) {
         Role roleAdmin = roleService.getOrSave(UserRole.ROLE_ADMIN);
