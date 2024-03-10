@@ -10,4 +10,5 @@ public class ConstantTable {
     public static final String ROLE = "m_role";
     public static final String USER_ACCOUNT = "m_user_account";
     public static final String IMAGE = "m_image";
+    public static final String PAYMENT = "t_paymet";
 }

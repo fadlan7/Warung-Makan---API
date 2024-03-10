@@ -4,6 +4,7 @@ import com.enigma.wmb_api.constant.APIUrl;
 import com.enigma.wmb_api.constant.ResponseMessage;
 import com.enigma.wmb_api.dto.request.BillRequest;
 import com.enigma.wmb_api.dto.request.SearchBillRequest;
+import com.enigma.wmb_api.dto.request.UpdateBillPaymentStatusRequest;
 import com.enigma.wmb_api.dto.response.BillResponse;
 import com.enigma.wmb_api.dto.response.CommonResponse;
 import com.enigma.wmb_api.dto.response.PagingResponse;
@@ -17,13 +18,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = APIUrl.Bill_API)
 public class BillController {
     private final BillService billService;
-
 
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
     @PostMapping
@@ -83,4 +84,22 @@ public class BillController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping(path = "/status")
+    public ResponseEntity<CommonResponse<?>> updateStatus(
+            @RequestBody Map<String, Object> request
+    ) {
+        UpdateBillPaymentStatusRequest updatePaymentStatus = UpdateBillPaymentStatusRequest.builder()
+                .orderId(request.get("order_id").toString())
+                .transactionStatus(request.get("transaction_status").toString())
+                .build();
+
+        billService.updateStatus(updatePaymentStatus);
+
+        return ResponseEntity.ok(CommonResponse.builder()
+                .statusCode(HttpStatus.OK.value())
+                .message(ResponseMessage.SUCCESS_UPDATE_DATA)
+                .build());
+    }
+
 }
