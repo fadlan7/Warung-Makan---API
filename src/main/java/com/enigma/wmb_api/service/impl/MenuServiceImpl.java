@@ -27,6 +27,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class MenuServiceImpl implements MenuService {
@@ -113,10 +115,13 @@ public class MenuServiceImpl implements MenuService {
                 .id(menu.getId())
                 .name(menu.getName())
                 .price(menu.getPrice())
-                .image(ImageResponse.builder()
-                        .url(APIUrl.MENU_IMAGE_DOWNLOAD_API + menu.getImage().getId())
-                        .name(menu.getImage().getName())
-                        .build())
-                .build();
+                .image(
+                        Optional.ofNullable(menu.getImage())
+                                .map(image -> ImageResponse.builder()
+                                        .url(APIUrl.MENU_IMAGE_DOWNLOAD_API + image.getId())
+                                        .name(image.getName())
+                                        .build())
+                                .orElse(null)
+                ).build();
     }
 }
