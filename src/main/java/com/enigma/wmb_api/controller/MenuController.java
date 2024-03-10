@@ -4,6 +4,7 @@ import com.enigma.wmb_api.constant.APIUrl;
 import com.enigma.wmb_api.constant.ResponseMessage;
 import com.enigma.wmb_api.dto.request.SearchMenuRequest;
 import com.enigma.wmb_api.dto.response.CommonResponse;
+import com.enigma.wmb_api.dto.response.MenuResponse;
 import com.enigma.wmb_api.dto.response.PagingResponse;
 import com.enigma.wmb_api.entity.Menu;
 import com.enigma.wmb_api.service.MenuService;
@@ -25,11 +26,11 @@ public class MenuController {
 
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
     @PostMapping
-    public ResponseEntity<CommonResponse<Menu>> createNewMenu(@RequestBody Menu menu) {
+    public ResponseEntity<CommonResponse<MenuResponse>> createNewMenu(@RequestBody Menu menu) {
 
-        Menu newMenu = menuService.create(menu);
+        MenuResponse newMenu = menuService.create(menu);
 
-        CommonResponse<Menu> response = CommonResponse.<Menu>builder()
+        CommonResponse<MenuResponse> response = CommonResponse.<MenuResponse>builder()
                 .statusCode(HttpStatus.CREATED.value())
                  .message(ResponseMessage.SUCCESS_SAVE_DATA)
                 .data(newMenu)
@@ -54,7 +55,7 @@ public class MenuController {
     }
 
     @GetMapping
-    public ResponseEntity<CommonResponse<List<Menu>>> getAll(
+    public ResponseEntity<CommonResponse<List<MenuResponse>>> getAll(
             @RequestParam(name = "page", defaultValue = "1") Integer page,
             @RequestParam(name = "size", defaultValue = "10") Integer size,
             @RequestParam(name = "sortBy", defaultValue = "name") String sortBy,
@@ -74,7 +75,7 @@ public class MenuController {
                 .minPrice(minPrice)
                 .maxPrice(maxPrice)
                 .build();
-        Page<Menu> menus = menuService.getAll(request);
+        Page<MenuResponse> menus = menuService.getAll(request);
 
         PagingResponse pagingResponse = PagingResponse.builder()
                 .totalPages(menus.getTotalPages())
@@ -85,7 +86,7 @@ public class MenuController {
                 .hasPrevious(menus.hasPrevious())
                 .build();
 
-        CommonResponse<List<Menu>> response = CommonResponse.<List<Menu>>builder()
+        CommonResponse<List<MenuResponse>> response = CommonResponse.<List<MenuResponse>>builder()
                 .statusCode(HttpStatus.OK.value())
                  .message(ResponseMessage.SUCCESS_GET_DATA)
                 .data(menus.getContent())
@@ -97,10 +98,10 @@ public class MenuController {
 
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
     @PutMapping
-    public ResponseEntity<CommonResponse<Menu>> updateMenu(@RequestBody Menu menu) {
-        Menu updatedMenu = menuService.update(menu);
+    public ResponseEntity<CommonResponse<MenuResponse>> updateMenu(@RequestBody Menu menu) {
+        MenuResponse updatedMenu = menuService.update(menu);
 
-        CommonResponse<Menu> response = CommonResponse.<Menu>builder()
+        CommonResponse<MenuResponse> response = CommonResponse.<MenuResponse>builder()
                 .statusCode(HttpStatus.OK.value())
                  .message(ResponseMessage.SUCCESS_UPDATE_DATA)
                 .data(updatedMenu)
