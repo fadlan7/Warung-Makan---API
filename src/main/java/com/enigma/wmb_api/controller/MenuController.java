@@ -12,6 +12,8 @@ import com.enigma.wmb_api.entity.Menu;
 import com.enigma.wmb_api.service.MenuService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+
+@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = APIUrl.MENU_API)
