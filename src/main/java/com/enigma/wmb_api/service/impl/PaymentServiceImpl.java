@@ -4,6 +4,8 @@ import com.enigma.wmb_api.dto.request.PaymentDetailRequest;
 import com.enigma.wmb_api.dto.request.PaymentItemDetailRequest;
 import com.enigma.wmb_api.dto.request.PaymentRequest;
 import com.enigma.wmb_api.entity.Bill;
+import com.enigma.wmb_api.entity.BillDetail;
+import com.enigma.wmb_api.entity.Menu;
 import com.enigma.wmb_api.entity.Payment;
 import com.enigma.wmb_api.repository.PaymentRepository;
 import com.enigma.wmb_api.service.PaymentService;

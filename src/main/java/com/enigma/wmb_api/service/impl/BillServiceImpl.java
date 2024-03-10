@@ -1,10 +1,12 @@
 package com.enigma.wmb_api.service.impl;
 
+import com.enigma.wmb_api.constant.ResponseMessage;
 import com.enigma.wmb_api.dto.request.BillRequest;
 import com.enigma.wmb_api.dto.request.SearchBillRequest;
 import com.enigma.wmb_api.dto.response.BillDetailResponse;
 import com.enigma.wmb_api.dto.response.BillResponse;
 import com.enigma.wmb_api.dto.response.PaymentResponse;
+import com.enigma.wmb_api.dto.request.UpdateBillPaymentStatusRequest;
 import com.enigma.wmb_api.entity.*;
 import com.enigma.wmb_api.repository.BillRepository;
 import com.enigma.wmb_api.service.*;
@@ -12,8 +14,10 @@ import com.enigma.wmb_api.specification.BillSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.List;
@@ -140,5 +144,13 @@ public class BillServiceImpl implements BillService {
         }).toList();
 
         return new PageImpl<>(billResponses, pageable, bills.getTotalElements());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void updateStatus(UpdateBillPaymentStatusRequest request) {
+        Bill bill = billRepository.findById(request.getOrderId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ResponseMessage.ERROR_NOT_FOUND));
+        Payment payment = bill.getPayment();
+        payment.setTransactionStatus(request.getTransactionStatus());
     }
 }
