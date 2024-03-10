@@ -6,4 +6,5 @@ public class APIUrl {
     public static final String DINING_TABLE_API = "/api/tables";
     public static final String MENU_API = "/api/menus";
     public static final String AUTH_API = "/api/auth";
+    public static final String MENU_IMAGE_DOWNLOAD_API = "/api/menus/images/";
 }

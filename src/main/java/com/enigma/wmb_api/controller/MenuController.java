@@ -2,17 +2,24 @@ package com.enigma.wmb_api.controller;
 
 import com.enigma.wmb_api.constant.APIUrl;
 import com.enigma.wmb_api.constant.ResponseMessage;
+import com.enigma.wmb_api.dto.request.NewMenuRequest;
 import com.enigma.wmb_api.dto.request.SearchMenuRequest;
+import com.enigma.wmb_api.dto.request.UpdateMenuRequest;
 import com.enigma.wmb_api.dto.response.CommonResponse;
+import com.enigma.wmb_api.dto.response.MenuResponse;
 import com.enigma.wmb_api.dto.response.PagingResponse;
 import com.enigma.wmb_api.entity.Menu;
 import com.enigma.wmb_api.service.MenuService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,22 +29,37 @@ import java.util.List;
 public class MenuController {
 
     private final MenuService menuService;
+    private final ObjectMapper objectMapper;
 
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
-    @PostMapping
-    public ResponseEntity<CommonResponse<Menu>> createNewMenu(@RequestBody Menu menu) {
+    @PostMapping(
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
 
-        Menu newMenu = menuService.create(menu);
+    )
+    public ResponseEntity<CommonResponse<?>> createNewMenu(
+            @RequestPart(name = "menu") String jsonMenu,
+            @RequestPart(name = "image") MultipartFile image
+    ) {
+        CommonResponse.CommonResponseBuilder<MenuResponse> responseBuilder = CommonResponse.builder();
 
-        CommonResponse<Menu> response = CommonResponse.<Menu>builder()
-                .statusCode(HttpStatus.CREATED.value())
-                 .message(ResponseMessage.SUCCESS_SAVE_DATA)
-                .data(newMenu)
-                .build();
+        try {
+            NewMenuRequest request = objectMapper.readValue(jsonMenu, new TypeReference<>() {
+            });
+            request.setImage(image);
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+            MenuResponse menuResponseResponse = menuService.create(request);
+
+            responseBuilder.statusCode(HttpStatus.CREATED.value());
+            responseBuilder.message(ResponseMessage.SUCCESS_SAVE_DATA);
+            responseBuilder.data(menuResponseResponse);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseBuilder.build());
+        } catch (Exception e) {
+            responseBuilder.message(ResponseMessage.ERROR_INTERNAL_SERVER);
+            responseBuilder.statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBuilder.build());
+        }
     }
 
     @GetMapping(path = "/{id}")
@@ -46,7 +68,7 @@ public class MenuController {
 
         CommonResponse<Menu> response = CommonResponse.<Menu>builder()
                 .statusCode(HttpStatus.OK.value())
-                 .message(ResponseMessage.SUCCESS_GET_DATA)
+                .message(ResponseMessage.SUCCESS_GET_DATA)
                 .data(menu)
                 .build();
 
@@ -54,7 +76,7 @@ public class MenuController {
     }
 
     @GetMapping
-    public ResponseEntity<CommonResponse<List<Menu>>> getAll(
+    public ResponseEntity<CommonResponse<List<MenuResponse>>> getAll(
             @RequestParam(name = "page", defaultValue = "1") Integer page,
             @RequestParam(name = "size", defaultValue = "10") Integer size,
             @RequestParam(name = "sortBy", defaultValue = "name") String sortBy,
@@ -74,7 +96,7 @@ public class MenuController {
                 .minPrice(minPrice)
                 .maxPrice(maxPrice)
                 .build();
-        Page<Menu> menus = menuService.getAll(request);
+        Page<MenuResponse> menus = menuService.getAll(request);
 
         PagingResponse pagingResponse = PagingResponse.builder()
                 .totalPages(menus.getTotalPages())
@@ -85,9 +107,9 @@ public class MenuController {
                 .hasPrevious(menus.hasPrevious())
                 .build();
 
-        CommonResponse<List<Menu>> response = CommonResponse.<List<Menu>>builder()
+        CommonResponse<List<MenuResponse>> response = CommonResponse.<List<MenuResponse>>builder()
                 .statusCode(HttpStatus.OK.value())
-                 .message(ResponseMessage.SUCCESS_GET_DATA)
+                .message(ResponseMessage.SUCCESS_GET_DATA)
                 .data(menus.getContent())
                 .paging(pagingResponse)
                 .build();
@@ -96,19 +118,33 @@ public class MenuController {
     }
 
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")
-    @PutMapping
-    public ResponseEntity<CommonResponse<Menu>> updateMenu(@RequestBody Menu menu) {
-        Menu updatedMenu = menuService.update(menu);
+    @PutMapping(
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<CommonResponse<?>> updateMenu(
+            @RequestPart(name = "menu") String jsonMenu,
+            @RequestPart(name = "image", required = false) MultipartFile image
+    ) {
+        CommonResponse.CommonResponseBuilder<MenuResponse> responseBuilder = CommonResponse.builder();
 
-        CommonResponse<Menu> response = CommonResponse.<Menu>builder()
-                .statusCode(HttpStatus.OK.value())
-                 .message(ResponseMessage.SUCCESS_UPDATE_DATA)
-                .data(updatedMenu)
-                .build();
+        try {
+            UpdateMenuRequest request = objectMapper.readValue(jsonMenu, new TypeReference<>() {
+            });
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
+            request.setImage(image);
+
+            MenuResponse updatedMenu = menuService.update(request);
+            responseBuilder.statusCode(HttpStatus.OK.value());
+            responseBuilder.message(ResponseMessage.SUCCESS_UPDATE_DATA);
+            responseBuilder.data(updatedMenu);
+            return ResponseEntity.status(HttpStatus.OK).body(responseBuilder.build());
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseBuilder.message(ResponseMessage.ERROR_INTERNAL_SERVER);
+            responseBuilder.statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBuilder.build());
+        }
     }
 
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','ADMIN')")

@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.enigma.wmb_api.constant.ResponseMessage;
 import com.enigma.wmb_api.dto.response.JWTClaims;
 import com.enigma.wmb_api.entity.UserAccount;
 import com.enigma.wmb_api.service.JwtService;
@@ -23,12 +24,16 @@ import java.time.Instant;
 public class JwtServiceImpl implements JwtService {
     private final String JWT_SECRET;
     private final String ISSUER;
+    private final long JWT_EXPIRATION;
+
 
     public JwtServiceImpl(
             @Value("${warung_makan_bahari.jwt.secret_key}") String jwtSecret,
-            @Value("${warung_makan_bahari.jwt.issuer}") String issuer) {
+            @Value("${warung_makan_bahari.jwt.issuer}") String issuer,
+            @Value("${warung_makan_bahari.jwt.expirationInSecond}") long expiration) {
         JWT_SECRET = jwtSecret;
         ISSUER = issuer;
+        JWT_EXPIRATION = expiration;
     }
 
     @Override
@@ -40,11 +45,11 @@ public class JwtServiceImpl implements JwtService {
                     .withSubject(userAccount.getId())
                     .withClaim("roles", userAccount.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
                     .withIssuedAt(Instant.now())
-                    .withExpiresAt(Instant.now().plusSeconds(9999999))
+                    .withExpiresAt(Instant.now().plusSeconds(JWT_EXPIRATION))
                     .withIssuer(ISSUER)
                     .sign(algorithm);
         } catch (JWTCreationException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "error while creating jwt token");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ResponseMessage.ERROR_CREATING_JWT);
         }
     }
 
