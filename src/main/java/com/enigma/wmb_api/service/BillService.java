@@ -7,10 +7,14 @@ import com.enigma.wmb_api.dto.response.BillResponse;
 import com.enigma.wmb_api.dto.request.UpdateBillPaymentStatusRequest;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 public interface BillService {
     BillResponse create(BillRequest request);
 
     Page<BillResponse> getAllBill(SearchBillRequest request);
 
     void updateStatus(UpdateBillPaymentStatusRequest request);
+
+    List<BillResponse> getAllBillReport(SearchBillRequest request);
 }
