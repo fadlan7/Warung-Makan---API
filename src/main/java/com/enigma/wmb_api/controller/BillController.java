@@ -61,7 +61,6 @@ public class BillController {
                 .direction(direction)
                 .id(id)
                 .minTransDate(minTransDate)
-                .maxTransDate(maxTransDate)
                 .tableId(tableId)
                 .transType(transType)
                 .build();
