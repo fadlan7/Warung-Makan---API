@@ -79,7 +79,7 @@ public class BillServiceImpl implements BillService {
                     .build();
         }).toList();
 
-        Payment payment =paymentService.createPayment(bill);
+        Payment payment = paymentService.createPayment(bill);
         bill.setPayment(payment);
 
         PaymentResponse paymentResponse = PaymentResponse.builder()
@@ -144,6 +144,45 @@ public class BillServiceImpl implements BillService {
         }).toList();
 
         return new PageImpl<>(billResponses, pageable, bills.getTotalElements());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<BillResponse> getAllBillReport(SearchBillRequest request) {
+        // Create a specification based on the request criteria
+        Specification<Bill> specification = BillSpecification.getSpecification(request);
+
+        // Fetch all bills that match the specification criteria
+        List<Bill> bills = billRepository.findAll(specification);
+
+        // Convert each Bill to a BillResponse and collect into a list
+        List<BillResponse> billResponses = bills.stream().map(bill -> {
+            List<BillDetailResponse> billDetailResponses = bill.getBillDetails().stream().map(billDetail -> {
+                return BillDetailResponse.builder()
+                        .id(billDetail.getId())
+                        .billId(billDetail.getBill().getId())
+                        .menuId(billDetail.getMenu().getId())
+                        .qty(billDetail.getQty())
+                        .price(billDetail.getPrice())
+                        .build();
+            }).toList();
+
+            String tableId = null;
+            if (bill.getDiningTable() != null) {
+                tableId = bill.getDiningTable().getId();
+            }
+
+            return BillResponse.builder()
+                    .id(bill.getId())
+                    .transDate(bill.getTransDate())
+                    .customerId(bill.getCustomer().getId())
+                    .transType(bill.getTransactionType().getId())
+                    .tableId(tableId)
+                    .billDetails(billDetailResponses)
+                    .build();
+        }).toList();
+
+        return billResponses;
     }
 
     @Transactional(rollbackFor = Exception.class)
