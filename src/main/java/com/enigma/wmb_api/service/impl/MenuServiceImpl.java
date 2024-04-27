@@ -57,8 +57,14 @@ public class MenuServiceImpl implements MenuService {
         return convertMenuToMenuResponse(newMenu);
     }
 
-    @Transactional(readOnly = true)
     @Override
+    public MenuResponse getOneById(String id) {
+        Menu menu = findByIdOrThrowNotFound(id);
+        return convertMenuToMenuResponse(menu);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Menu getById(String id) {
         return findByIdOrThrowNotFound(id);
     }
@@ -66,12 +72,12 @@ public class MenuServiceImpl implements MenuService {
     @Transactional(readOnly = true)
     @Override
     public Page<MenuResponse> getAll(SearchMenuRequest request) {
-        if (request.getPage() <= 0) request.setPage(1);
+         if (request.getPage() <= 0) request.setPage(1);
 
         Sort sort = Sort.by(Sort.Direction.fromString(request.getDirection()), request.getSortBy());
         Pageable pageable = PageRequest.of((request.getPage() - 1), request.getSize(), sort);
+        Specification<Menu> specification = MenuSpecification.getSpecification(request.getQuery());
 
-        Specification<Menu> specification = MenuSpecification.getSpecification(request);
         return menuRepository.findAll(specification, pageable).map(this::convertMenuToMenuResponse);
     }
 

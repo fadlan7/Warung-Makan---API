@@ -7,7 +7,6 @@ import com.enigma.wmb_api.dto.response.CustomerResponse;
 import com.enigma.wmb_api.dto.response.GetCustomerResponse;
 import com.enigma.wmb_api.dto.response.UserAccountResponse;
 import com.enigma.wmb_api.entity.Customer;
-import com.enigma.wmb_api.entity.UserAccount;
 import com.enigma.wmb_api.repository.CustomerRepository;
 import com.enigma.wmb_api.service.CustomerService;
 import com.enigma.wmb_api.service.UserService;
@@ -44,6 +43,14 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer getById(String id) {
         return findByIdOrThrowNotFound(id);
+    }
+
+    @Override
+    public Customer getCustomerId(String id) {
+//        String custId = customerRepository.findIdByAccountId(id);
+        Customer cust = customerRepository.findCustomerByUserAccountId(id);
+
+        return cust;
     }
 
     @Transactional(readOnly = true)

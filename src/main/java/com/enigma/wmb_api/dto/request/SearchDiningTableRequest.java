@@ -13,5 +13,5 @@ public class SearchDiningTableRequest {
     private Integer size;
     private String sortBy;
     private String direction;
-    private String name;
+    private String query;
 }
