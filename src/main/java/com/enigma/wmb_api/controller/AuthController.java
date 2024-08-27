@@ -12,10 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,7 +38,7 @@ public class AuthController {
     }
 
     @PreAuthorize("hasAnyRole('SUPER_ADMIN')")
-    @PostMapping(path = "/register-admin",
+    @PostMapping(path = "/register/admin",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
@@ -68,5 +65,23 @@ public class AuthController {
                 .build();
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(path = "validate-token", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> validateToken(){
+        boolean valid = authService.validateToken();
+        if (valid) {
+            CommonResponse<String> response = CommonResponse.<String>builder()
+                    .statusCode(HttpStatus.OK.value())
+                    .message(ResponseMessage.SUCCESS_GET_DATA)
+                    .build();
+            return ResponseEntity.ok(response);
+        } else {
+            CommonResponse<String> response = CommonResponse.<String>builder()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .message(ResponseMessage.ERROR_INVALID_JWT)
+                    .build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
     }
 }

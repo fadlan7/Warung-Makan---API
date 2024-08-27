@@ -40,7 +40,7 @@ public class DiningTableServiceImpl implements DiningTableService {
     @Transactional(readOnly = true)
     @Override
     public List<DiningTable> getAll(SearchDiningTableRequest request) {
-        Specification<DiningTable> specification = DiningTableSpecification.getSpecification(request);
+        Specification<DiningTable> specification = DiningTableSpecification.getSpecification(request.getQuery());
         return tableRepository.findAll(specification);
     }
 

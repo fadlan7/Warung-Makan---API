@@ -32,8 +32,21 @@ public class CustomerController {
 
         CommonResponse<Customer> response = CommonResponse.<Customer>builder()
                 .statusCode(HttpStatus.OK.value())
-                 .message(ResponseMessage.SUCCESS_GET_DATA)
+                .message(ResponseMessage.SUCCESS_GET_DATA)
                 .data(customer)
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(path = "/get-cust-id/{id}")
+    public ResponseEntity<CommonResponse<Customer>> getCustId(@PathVariable String id){
+        Customer accountId = customerService.getCustomerId(id);
+
+        CommonResponse<Customer> response = CommonResponse.<Customer>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message(ResponseMessage.SUCCESS_GET_DATA)
+                .data(accountId)
                 .build();
 
         return ResponseEntity.ok(response);
@@ -86,7 +99,7 @@ public class CustomerController {
 
         CommonResponse<CustomerResponse> response = CommonResponse.<CustomerResponse>builder()
                 .statusCode(HttpStatus.OK.value())
-                 .message(ResponseMessage.SUCCESS_UPDATE_DATA)
+                .message(ResponseMessage.SUCCESS_UPDATE_DATA)
                 .data(updatedCustomer)
                 .build();
 
@@ -102,7 +115,7 @@ public class CustomerController {
 
         CommonResponse<String> response = CommonResponse.<String>builder()
                 .statusCode(HttpStatus.OK.value())
-                 .message(ResponseMessage.SUCCESS_DELETE_DATA)
+                .message(ResponseMessage.SUCCESS_DELETE_DATA)
                 .build();
 
         return ResponseEntity.ok(response);
@@ -117,7 +130,7 @@ public class CustomerController {
 
         CommonResponse<String> response = CommonResponse.<String>builder()
                 .statusCode(HttpStatus.OK.value())
-                 .message(ResponseMessage.SUCCESS_UPDATE_DATA)
+                .message(ResponseMessage.SUCCESS_UPDATE_DATA)
                 .build();
 
         return ResponseEntity.ok(response);

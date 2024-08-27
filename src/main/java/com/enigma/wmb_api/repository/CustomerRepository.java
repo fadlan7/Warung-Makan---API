@@ -15,4 +15,10 @@ public interface CustomerRepository extends JpaRepository<Customer, String>, Jpa
     @Modifying
     @Query(value = "UPDATE m_customer SET is_member = :isMember WHERE  id = :id", nativeQuery = true)
     void updateMember(@Param("id") String id, @Param("isMember") Boolean isMember);
+
+//    @Transactional
+//    @Query(value = "SELECT id FROM m_customer WHERE user_account_id = :accountId", nativeQuery = true)
+//    String findIdByAccountId(@Param("userAccountId") String accountId);
+
+    Customer findCustomerByUserAccountId(String id);
 }

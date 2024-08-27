@@ -67,10 +67,10 @@ public class MenuController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<CommonResponse<Menu>> getMenuById(@PathVariable String id) {
-        Menu menu = menuService.getById(id);
+    public ResponseEntity<CommonResponse<MenuResponse>> getMenuById(@PathVariable String id) {
+        MenuResponse menu = menuService.getOneById(id);
 
-        CommonResponse<Menu> response = CommonResponse.<Menu>builder()
+        CommonResponse<MenuResponse> response = CommonResponse.<MenuResponse>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message(ResponseMessage.SUCCESS_GET_DATA)
                 .data(menu)
@@ -85,20 +85,14 @@ public class MenuController {
             @RequestParam(name = "size", defaultValue = "10") Integer size,
             @RequestParam(name = "sortBy", defaultValue = "name") String sortBy,
             @RequestParam(name = "direction", defaultValue = "asc") String direction,
-            @RequestParam(name = "name", required = false) String name,
-            @RequestParam(name = "price", required = false) Float price,
-            @RequestParam(name = "minPrice", required = false) Float minPrice,
-            @RequestParam(name = "maxPrice", required = false) Float maxPrice
+            @RequestParam(name = "q", required = false) String query
     ) {
         SearchMenuRequest request = SearchMenuRequest.builder()
                 .page(page)
                 .size(size)
                 .sortBy(sortBy)
                 .direction(direction)
-                .name(name)
-                .price(price)
-                .minPrice(minPrice)
-                .maxPrice(maxPrice)
+                .query(query)
                 .build();
         Page<MenuResponse> menus = menuService.getAll(request);
 

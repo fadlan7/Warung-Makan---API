@@ -13,8 +13,5 @@ public class SearchMenuRequest {
     private Integer size;
     private String sortBy;
     private String direction;
-    private String name;
-    private Float price;
-    private Float minPrice;
-    private Float maxPrice;
+    private String query;
 }

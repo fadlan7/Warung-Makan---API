@@ -54,10 +54,10 @@ public class DiningTableController {
 
     @GetMapping
     public ResponseEntity<CommonResponse<List<DiningTable>>> getAllTable(
-            @RequestParam(name = "name", required = false) String name
+            @RequestParam(name = "q", required = false) String query
     ) {
         SearchDiningTableRequest request = SearchDiningTableRequest.builder()
-                .name(name)
+                .query(query)
                 .build();
 
         List<DiningTable> tables = tableService.getAll(request);

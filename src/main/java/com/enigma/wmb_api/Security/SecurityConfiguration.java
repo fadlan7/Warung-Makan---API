@@ -45,6 +45,9 @@ public class SecurityConfiguration {
                                 "/webjars/**",
                                 "/swagger-ui.html").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/bills/status").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/menus/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/menus/images/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/customers/get-cust-id/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

@@ -8,4 +8,6 @@ public interface AuthService {
     RegisterResponse register(AuthRequest request);
     RegisterResponse registerAdmin(AuthRequest request);
     LoginResponse login(AuthRequest request);
+
+    boolean validateToken();
 }

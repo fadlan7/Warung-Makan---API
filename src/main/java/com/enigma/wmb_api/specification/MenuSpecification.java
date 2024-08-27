@@ -5,38 +5,27 @@ import com.enigma.wmb_api.entity.Menu;
 import com.enigma.wmb_api.repository.MenuRepository;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MenuSpecification {
-    public static Specification<Menu> getSpecification(SearchMenuRequest request) {
-        MenuRepository customerRepository = null;
+    public static Specification<Menu> getSpecification(String q) {
         return (root, cq, cb) -> {
+            if (!StringUtils.hasText(q)) return cb.conjunction();
 
             List<Predicate> predicates = new ArrayList<>();
+            predicates.add(cb.like(cb.lower(root.get("name")), "%" + q.toLowerCase() + "%"));
 
-            if (request.getName() != null) {
-                Predicate namePredicate = cb.like(cb.lower(root.get("name")), "%" + request.getName().toLowerCase() + "%");
-                predicates.add(namePredicate);
+            try {
+                Long price = Long.valueOf(q);
+                predicates.add(cb.equal(root.get("price"), price));
+            } catch (NumberFormatException e) {
+                // Ignore
             }
 
-            if (request.getPrice() != null) {
-                Predicate pricePredicate = cb.equal(root.get("price"), request.getPrice());
-                predicates.add(pricePredicate);
-            }
-
-            if (request.getMinPrice() != null) {
-                Predicate pricePredicate = cb.greaterThanOrEqualTo(root.get("price"), request.getMinPrice());
-                predicates.add(pricePredicate);
-            }
-
-            if (request.getMaxPrice() != null) {
-                Predicate pricePredicate = cb.lessThanOrEqualTo(root.get("price"), request.getMaxPrice());
-                predicates.add(pricePredicate);
-            }
-
-            return cq.where(predicates.toArray(new Predicate[]{})).getRestriction();
+            return cb.or(predicates.toArray(new Predicate[]{}));
         };
     }
 }
